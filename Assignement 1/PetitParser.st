@@ -1,0 +1,1 @@
+'From Pharo2.0 of 7 March 2013 [Latest update: #20625] on 11 November 2013 at 3:01:05 pm'!!UndefinedObject methodsFor: '*petitparser-converting' stamp: 'lr 11/29/2011 20:49'!asParser	"Answer a parser that succeeds and does not consume anything."		^ PPEpsilonParser new! !
