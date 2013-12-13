@@ -53,7 +53,7 @@ In this schema, at first glance, we see that the arrow, and his tree, in the mid
 \end{figure}
 In the schema we can see more clearly the arrow representing \textsc{PetitParser} class.\\
 Based on the legend explained above, we found that it contains no accessors and one attribute, \textsc{properties} which is a instanceVariable.  Some methods, public or private access directly to this attribute.  In theorical view, it's not good to access directly, you must prefer to use accessor.  With accessor, you can validate the information before setting your attributes.  Of course, it is less important for private method if you are very carefull when you use an attribute.  But, for public method, you must use a attribute.
-Of course, it's a theorical view and we look all methods accessing directly the attribute before getting more analysis.  We have found XX methods : 
+Of course, it's a theorical view and we look all methods accessing directly the attribute before getting more analysis.  We have found 5 methods : 
 \begin{itemize}
 	\item removeProperty: aKey ifAbsent: aBlock : this private method 	remove the property with aKey.  If a key is found, it returns the associated value and the the result of evaluating aBlock otherwise.  According to the code, we can say that this method is a safe method for the attribute : it removes the key if, and only if, the key exists.  With this solution, the integrity of the attribute is checked;
 	\item propertyAt: aKey put: anObject : this private method change the object (anObject) linked to the key (aKey) in the property.  if aKey is not found, it creates a new entry.  Again, we see that this method is a safe method and the integrity of the attribute is checked;
@@ -63,8 +63,11 @@ Of course, it's a theorical view and we look all methods accessing directly the 
 \end{itemize}
 In ddition to checking the code of methods, it is interesting to note that this methods are well used by this class or children classes.\\
 Even if the integrity of the attribute is checked in every method accessing directly to the attribute, we see that almost method performs a test on property.  Why the creator doesn't use the test method in other methods listed below ? \\
-Finally, we see that some methods are setter for property.  Because property contains keys and values, the creator can not do a "simple" setter to change the property but he create method to add or remove (key,value).  So, in conclusion, we can see that it's important to check the code after reading this schema and, evenf if we found no getter and setter, the most methods accessing directly the attribute are setter and getter for the structure of property.
+Finally, we see that some methods are setter for property.  Because property contains keys and values, the creator can not do a "simple" setter to change the property but he create method to add or remove (key,value).  So, in conclusion, we can see that it's important to check the code after reading this schema and, evenf if we found no getter and setter, the most methods accessing directly the attribute are setter and getter for the structure of property.\\
 
+For the dark blue links, we see that a lot of methods are linked together.  It's a signe that the code are modulable and reduce code duplication.  It is also the consequence of the \textsc{PetitParser} system : it uses structures with childrens and list of object.  To access these structures,  methods use these sub-structures and methods related to them.\\
+
+Finally, we see some brown arrows.  It means that the method override code.  AND ???? \\
 
 
 \todo{blueprints}
