@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2013.11.9)  17 NOV 2013 16:20
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2013.11.9)  18 NOV 2013 00:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -764,7 +764,7 @@ LaTeX Info: Redefining \nameref on input line 4.
 \openout4 = `travail.out'.
 
  (./title.tex
-<ucl.png, id=24, 183.5658pt x 325.215pt>
+<ucl.png, id=40, 183.5658pt x 325.215pt>
 File: ucl.png Graphic file (type png)
  <use ucl.png>
 Package pdftex.def Info: ucl.png used on input line 6.
@@ -832,69 +832,80 @@ File: omsptm.fd
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 13.
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 34.
-
-
-LaTeX Warning: Reference `LastPageModif' on page 1 undefined on input line 34.
-
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.34 \section
-             {Example of :} [1]
+l.32 \includegraphics[scale=0.6]{overview.png}
+                                              \\ [1]
+<overview.png, id=61, 649.42625pt x 266.9975pt>
+File: overview.png Graphic file (type png)
+ <use overview.png>
+Package pdftex.def Info: overview.png used on input line 32.
+(pdftex.def)             Requested size: 389.65875pt x 160.19972pt.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 35.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 36.
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--37
+Overfull \hbox (20.13452pt too wide) in paragraph at lines 41--42
+[][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[2 <./overview.png>]
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 74.
+ [3]
+Underfull \hbox (badness 10000) in paragraph at lines 84--85
 
  []
 
 
-LaTeX Warning: Reference `LastPageModif' on page 2 undefined on input line 58.
+Overfull \hbox (58.1094pt too wide) in paragraph at lines 90--95
+\T1/ptm/m/n/12 In PetitParser-Parsers pack-age, the PPDel-e-gateParser class co
+n-tains a long method named \T1/lmtt/m/n/12 morphicShapeSeen\T1/ptm/m/n/12 .
+ []
 
-[2] 
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--95
+
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
+
+ []
+
+[5] [6] 
 AED: lastpage setting LastPage
-
-LaTeX Warning: Reference `LastPageModif' on page 3 undefined on input line 61.
-
-[3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 61.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 61.
+[7]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
  (./travail.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 61.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 61.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
 Package rerunfilecheck Info: File `travail.out' has not changed.
-(rerunfilecheck)             Checksum: E3CA5EB21AB225C11364BBFDD0F1483E;355.
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 61.
+(rerunfilecheck)             Checksum: 721D64E825DA47D054175DC631CFDC6C;572.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
  ) 
 Here is how much of TeX's memory you used:
- 9977 strings out of 495031
- 139659 string characters out of 6181531
- 319241 words of memory out of 5000000
- 12932 multiletter control sequences out of 15000+600000
+ 10013 strings out of 495031
+ 140125 string characters out of 6181531
+ 337210 words of memory out of 5000000
+ 12939 multiletter control sequences out of 15000+600000
  78442 words of font info for 78 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 34i,11n,43p,454b,1060s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texlive/texmf-dist
-/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtcsc10.pfb></u
-sr/share/texmf/fonts/type1/public/lm/lmtt12.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw
-/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.
-pfb>
-Output written on travail.pdf (4 pages, 88788 bytes).
+ 34i,12n,43p,879b,1060s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
+c/dvips/lm/lm-ec.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc
+}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
+/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/pub
+lic/lm/lmtcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt12.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/urw/times/utmri8a.pfb>
+Output written on travail.pdf (8 pages, 124273 bytes).
 PDF statistics:
- 93 PDF objects out of 1000 (max. 8388607)
- 79 compressed objects within 1 object stream
- 25 named destinations out of 1000 (max. 500000)
- 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 162 PDF objects out of 1000 (max. 8388607)
+ 140 compressed objects within 2 object streams
+ 53 named destinations out of 1000 (max. 500000)
+ 83 words of extra memory for PDF output out of 10000 (max. 10000000)
 
