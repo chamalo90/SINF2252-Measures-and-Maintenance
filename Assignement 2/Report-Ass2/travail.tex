@@ -24,13 +24,23 @@ The block at the bottom left side gives several metrics about the size. The firs
 Before going deeper in the code, it is very interesting to identify which classes are worst than others.  To visualize this, we give, below, the System Complexity of \textsc{PetitParser}.
 The height of the arrow symbolize the number of methods and the width symbolize the number of variables.
 \begin{figure}[ht]
-\label{pyramid}
-\includegraphics[scale=0.8]{system_complexity.png}
-\caption{Overview Pyramid}
+\label{system_complexity}
+\includegraphics[scale=0.35]{system_complexity.png}
+\caption{System Complexity}
 \end{figure}
 From left to right, we show : PPAbstractParserTest,PPParser, PJASTNode, SQLASTNode and Petit Analyzer code.  Other smalls arrows are objects from PetitParser or from SmallTalk.
 We see that PPAbstractParserTest and PPParser are worst than other.  In fact, when we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser add all his tests methods in one class.  In other hand, for the PPParser classes, and particulary for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we now the syntax for Java and SQlite, we understand that the number of variables must be very important.
 This graph also shows that the core of the PetitParser system is well efficient regarding to the complexity of this system.
+
+\subsection{Blueprints Complexity}
+An other tool to analyze PetitParser is Blueprint.  With this tool, we can show invocation of methods, access of attributes and how methods and attributes interact.\\
+As we have seen before with the System complexity, the tests classes are not very efficient and we prefer to focalize on the Core of PetitParser.  So, you can find below a schema representing the Blueprint Complexity of PetitParser classes and its ecosystem.\\
+\begin{figure}[ht]
+\label{blueprint_system}
+\includegraphics[scale=0.35]{blueprint_petit_parser.png}
+\caption{Blueprint Complexity of PetitParser packages}
+\end{figure}
+This schema contains arrows representing classes and his hierarchy.  In each arrow, we found 5 columns corresponding of differents entities we found in a class.  So from left to right, we found initialization, public methods, private methods, accessors, attributes.  In each column, we have also arrows representing the entity of this type in the class.  We found also, crossing columns, dark and light blue links.  The dark link represent the invocation of methods and the light represent access to attributes.\\
 
 
 \todo{blueprints}
