@@ -1,5 +1,6 @@
 \input{header.tex}
 \input{entete-baspage-titre.tex}
+\usepackage{todonotes}
 \begin{document}
 \input{title.tex}
 
@@ -10,15 +11,31 @@ In this report, we will use some Moose tools to perform an automated code analys
 \section{Overview}
 \subsection{The Moose Pyramid}
 The first tool given by Moose that is visualizing feature which gives a pyramid containing general metrics of the overall system. 
-\begin{figure}
+\begin{figure}[ht]
 \label{pyramid}
 \includegraphics[scale=0.8]{overview.png}
 \caption{Overview Pyramid}
 \end{figure}
 In this pyramid, you can observe three main blocks: one on the top and two at each side of the bottom. \\
-The block on the top, in green, gives metrics about inheritance measurements. 
+The block on the top, in green, gives metrics about inheritance measurements. The first metric is the average number of derived classes. The little red square at the corner of this metric cell tells us that the computed number given is higher than what is known as a normal value. This could be explained. Since \textsc{PetitParser} is a framework for parsing several languages, his model is quite complex and need a large number of derived class dedicated to each kind of parsing strategy. The second metric is the average hierarchy height. Moose tells use that the value computed is close to average. Mixing the results of these two values, we can conclude that \textsc{PetitParser} uses a large number of classes which are derived in a number of levels which are still reasonable.\\
+The block at the bottom left side gives several metrics about the size. The first metric shown is the number of packages. The number computed is lower than what would be expected for such a framework. But, as we already navigate manually through the code, we can say that strict rules are respected to build packages. These packages sometimes contain a large number of classes, especially the ones with tests and with parser types. The number of packages metric can be a bit distorted for this kind of framework. The second metric represents the number of classes. This time, the number is too high. To understand why this result could be a bad smell, we went back to the system browser. We saw that packages are mostly divided in two categories. There are packages that are almost empty. A very short number of classes are implemented. There are also packages with a way too many classes. After searching why these packages are too big, we found that the classes they put in them were still logically managed.  For instance, \textit{PetitParser-Parsers} package contains a large number of classes but these classes must be in this package. They are describing the different parsing strategies for the different types of parsers. The next metric is the number of methods. The number is a bit lower than what is expected. This observation comes from the fact that we have a large number of derived class. Some methods are written in a class higher in the hierarchy and don't need to be defined in all subclasses anymore. The last metric we'll take a look at is the number of lines of code. \textsc{PetitParser} seems to have this number in the average for Smalltalk projects.
 
 \subsection{System complexity}
+Before going deeper in the code, it is very interesting to identify which classes are worst than others.  To visualize this, we give, below, the System Complexity of \textsc{PetitParser}.
+The height of the arrow symbolize the number of methods and the width symbolize the number of variables.
+\begin{figure}[ht]
+\label{pyramid}
+\includegraphics[scale=0.8]{system_complexity.png}
+\caption{Overview Pyramid}
+\end{figure}
+From left to right, we show : PPAbstractParserTest,PPParser, PJASTNode, SQLASTNode and Petit Analyzer code.  Other smalls arrows are objects from PetitParser or from SmallTalk.
+We see that PPAbstractParserTest and PPParser are worst than other.  In fact, when we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser add all his tests methods in one class.  In other hand, for the PPParser classes, and particulary for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we now the syntax for Java and SQlite, we understand that the number of variables must be very important.
+This graph also shows that the core of the PetitParser system is well efficient regarding to the complexity of this system.
+
+
+\todo{blueprints}
+\todo{duplication side-by-side}
+\todo{CityMap}
 
 
 \end{document}
