@@ -1,0 +1,6 @@
+Before going deeper in the code, it is very interresting to identify wich class are worst than other.  To visualize that, we give, below, the System Complexity of PetitParser.
+The height of the arrow symbolize the number of methods and the width symbolize the number of variables.
+(figure)
+From left to right, we show : PPAbstractParserTest,PPParser, PJASTNode, SQLASTNode and Petit Analyzer code.  Other smalls arrows are objects from PetitParser or from SmallTalk.
+We see that PPAbstractParserTest and PPParser are worst than other.  In fact, when we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser add all his tests methods in one class.  In other hand, for the PPParser classes, and particulary for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we now the syntax for Java and SQlite, we understand that the number of variables must be very important.
+This graph show also that the core of the PetitParser system is well efficient regarding to the complexity of this system.
