@@ -69,8 +69,40 @@ For the dark blue links, we see that a lot of methods are linked together.  It's
 
 Finally, we see some brown arrows.  It means that the method override code.  AND ???? \\
 
+\subsection{Duplication side-by-side}
+Moi, Moose me renvoit un schéma vide, WTF ?
 
-\todo{blueprints}
+\subsection{Bad smells}
+With the Moose tool, we can have metrics about almost everything but they are not all relevant to detect bad smells.  To Detect more precisly some bad smells, we have created some query to get bad methods.\\
+
+\subsubsection{Number of lines of Code}
+First, we want to see methods where the number of lines of codes is bigger than 50, we can query :
+\begin{lstlisting}
+each numberOfLinesOfCode>50
+\end{lstlisting}
+With this query, we can see that, in the \textsc{PetitParser} System, we found 7 classes with more than 50 lines of codes.\\
+
+\begin{figure}[ht]
+\centering
+\label{system_complexity_big_classes}
+\includegraphics[scale=0.55]{system_complexity_big_methods.png}
+\caption{Complexity of big classes}
+\end{figure}
+In the schema below, we can see that the class PPParser is the bigger one, with 758 lines of codes.  To go depper in the analysis, we can perform the query for this class and we see \todo{plante chez moi}\\
+\subsubsection{Accessors}
+An other interresting metric is the number of getter and setter for one attribute.  In mai ncase, you must have one getter and one setter for every attribute.  We see before that, for some attributes, we don't have any accessors. \\
+\begin{lstlisting}
+each numberOfAccessorMethods >= ( 2 * each numberOfAttributes ) 
+\end{lstlisting}
+This query return 22 classes and we can visualize these with the blueprint schema.\\
+\begin{figure}[ht]
+\centering
+\label{more_access_blueprint}
+\includegraphics[scale=0.35]{more_access_blueprint.png}
+\caption{Blueprint of classes with more accessors than 2* attributes}
+\end{figure}
+
+
 \todo{duplication side-by-side}
 \todo{CityMap}
 
