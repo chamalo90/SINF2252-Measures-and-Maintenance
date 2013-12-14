@@ -146,6 +146,17 @@ matchList: matchList index: matchIndex against: parserList index: parserIndex in
 \end{lstlisting}
 
 As say before, this is not very readable.  Also, we found a long method (35 lines) with no comments which does not help in understanding.  A manual analysis of the code explain us that it is a method testing if two list match (\todo{je suis pas sur :p}).  So, we can group parameters about list in one object.  With this solution, we can reduce the parameters number but mainly augment the cohesion in adding method directly in the object.  It is also more efficient when you want to use this method : with an object, you give just the object, you don't want to pass each parameter and try to have found every parameter before using this method.  it is very relevant because we found that this method is access in 51 methods.\\
+
+\subsubsection{Brain and god classes}
+A brain method or class is a method or a class that do too much work.  In general, we try to avoid such methods in programs because such methods are very specific, impossible to reuse and it is very difficult to maintain the code.  In general, it's the signe that your programs are not very modulable and you can improve your program by splitting these methods in several smaller methods.\\
+To find these methods or classes, we can search for long methods but it's not enough.  We search also methods with a lot of conditionnals.\\ 
+\begin{lstlisting}
+each numberOfConditionals > aNumber
+\end{lstlisting}
+Again, aNumber is a variable and we can ajust it to do better analysis.  If we take 5, we found 5 methods, whose the "matchList" method and parseOn method.  It's not a suprise because we have found this method in the large emthods emtrics and in the high parameters number metric.\\
+In this 5 methods, we found 3 methods from PetitParser package.  Before qualifing "God class" this class, given the definition of a god class.  According to the litterature, we can qualifing a class a "god class" if it is a complex class with low cohesion and with a high number of outer class accesses.\\
+To detect god class, we can use a query but each property of a god class has still analysed.  So, we can say that PPParser is a god class.\\
+
 \todo{duplication side-by-side}
 \todo{CityMap}
 
