@@ -3,7 +3,7 @@
 \usepackage{todonotes}
 \begin{document}
 \input{title.tex}
-
+\set
 \section{Introduction}
 For the first assignment, we had to analyse the code quality of the Petit-Parser framework project. Since we had to perform this analysis manually and Petit-Parser is a quite large framework, it was a hard job to go through all the code and analysis wasn't perfect because there were too many lines of code to read through. \\
 In this report, we will use some Moose tools to perform an automated code analysis of the same system. Our conclusion in the first report were optimistic about Petit-Parser even if we found some bad smells. Let's see if our previous conclusions are still valid after a deeper analysis with some metrics.
@@ -19,7 +19,6 @@ The first tool given by Moose that is visualizing feature which gives a pyramid 
 In this pyramid, you can observe three main blocks: one on the top and two at each side of the bottom. \\
 The block on the top, in green, gives metrics about inheritance measurements. The first metric is the average number of derived classes. The little red square at the corner of this metric cell tells us that the computed number given is higher than what is known as a normal value. This could be explained. Since \textsc{PetitParser} is a framework for parsing several languages, his model is quite complex and need a large number of derived class dedicated to each kind of parsing strategy. The second metric is the average hierarchy height. Moose tells use that the value computed is close to average. Mixing the results of these two values, we can conclude that \textsc{PetitParser} uses a large number of classes which are derived in a number of levels which are still reasonable.\\
 The block at the bottom left side gives several metrics about the size. The first metric shown is the number of packages. The number computed is lower than what would be expected for such a framework. But, as we already navigate manually through the code, we can say that strict rules are respected to build packages. These packages sometimes contain a large number of classes, especially the ones with tests and with parser types. The number of packages metric can be a bit distorted for this kind of framework. The second metric represents the number of classes. This time, the number is too high. To understand why this result could be a bad smell, we went back to the system browser. We saw that packages are mostly divided in two categories. There are packages that are almost empty. A very short number of classes are implemented. There are also packages with a way too many classes. After searching why these packages are too big, we found that the classes they put in them were still logically managed.  For instance, \textit{PetitParser-Parsers} package contains a large number of classes but these classes must be in this package. They are describing the different parsing strategies for the different types of parsers. The next metric is the number of methods. The number is a bit lower than what is expected. This observation comes from the fact that we have a large number of derived class. Some methods are written in a class higher in the hierarchy and don't need to be defined in all subclasses anymore. The last metric we'll take a look at is the number of lines of code. \textsc{PetitParser} seems to have this number in the average for Smalltalk projects.
-
 \subsection{System complexity}
 Before going deeper in the code, it is very interesting to identify which classes are worst than others.  To visualize this, we give, below, the System Complexity of \textsc{PetitParser}.
 The height of the arrow symbolize the number of methods and the width symbolize the number of variables.
@@ -29,18 +28,17 @@ The height of the arrow symbolize the number of methods and the width symbolize 
 \caption{System Complexity}
 \end{figure}
 From left to right, we show : PPAbstractParserTest,PPParser, PJASTNode, SQLASTNode and Petit Analyzer code.  Other smalls arrows are objects from PetitParser or from SmallTalk.
-We see that PPAbstractParserTest and PPParser are worst than other.  In fact, when we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser add all his tests methods in one class.  In other hand, for the PPParser classes, and particulary for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we now the syntax for Java and SQlite, we understand that the number of variables must be very important.
-This graph also shows that the core of the PetitParser system is well efficient regarding to the complexity of this system.
-
+We see that PPAbstractParserTest and PPParser are worst than others.  Actually, if we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser added all his testing methods in one class.  In other part, for the PPParser classes, and particularly for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we know the syntax for Java and SQlite, we understand that the number of variables must be very important.
+This graph also shows that the core of the PetitParser system is kind of efficient regarding to the complexity of this system.
 \subsection{Blueprints Complexity}
-An other tool to analyze \textsc{PetitParser} is Blueprint.  With this tool, we can show invocation of methods, access of attributes and how methods and attributes interact.\\
-As we have seen before with the System complexity, the tests classes are not very efficient and we prefer to focalize on the Core of \textsc{PetitParser}.  So, you can find below a schema representing the Blueprint Complexity of \textsc{PetitParser} classes and its ecosystem.\\
+An other tool to analyze \textsc{PetitParser} is Blueprint.  With this tool, we can show invocation of methods, accesses to attributes and how methods and attributes interact.\\
+As we have seen before with the System complexity, the test classes are not very efficient and we prefer to focus on the core of \textsc{PetitParser}.  So, you can find below a schema representing the Blueprint Complexity of \textsc{PetitParser} classes and its core system.\\
 \begin{figure}[ht]
 \label{blueprint_system}
 \includegraphics[scale=0.35]{blueprint_petit_parser.png}
 \caption{Blueprint Complexity of PetitParser packages}
 \end{figure}
-This schema contains arrows representing classes and his hierarchy.  In each arrow, we found 5 columns corresponding of differents entities we found in a class.  So from left to right, we found initialization, public methods, private methods, accessors and attributes.  In each column, we have also arrows representing the entity of this type in the class.  We found also, crossing columns, dark and light blue links.  The dark link represent the invocation of methods and the light represent access to attributes.\\
+This schema contains arrows representing classes and his hierarchy.  In each arrow, we found 5 columns corresponding of differents entities we found in a class.  So from left to right, we found initialization, public methods, private methods, accessors and attributes.  In each column, we have also arrows representing the entity of this type in the class.  We found also, crossing columns, dark and light blue links.  The dark link represents the invocation of methods and the light one represents access to attributes.\\
 
 In this schema, at first glance, we see that the arrow, and his tree, in the middle is the main class of \textsc{PetitParser}.  The class call \textsc{PetitParser} and, indeed, it is the main class of the project. \\
 
@@ -51,7 +49,7 @@ In this schema, at first glance, we see that the arrow, and his tree, in the mid
 \includegraphics[scale=0.35]{blueprint_pparser.png}
 \caption{Blueprint Complexity of PetitParser class}
 \end{figure}
-In the schema we can see more clearly the arrow representing \textsc{PetitParser} class.\\
+In the schema, we can see more clearly the arrow representing \textsc{PetitParser} class.\\
 Based on the legend explained above, we found that it contains no accessors and one attribute, \textsc{properties} which is a instanceVariable.  Some methods, public or private access directly to this attribute.  In theorical view, it's not good to access directly, you must prefer to use accessor.  With accessor, you can validate the information before setting your attributes.  Of course, it is less important for private method if you are very carefull when you use an attribute.  But, for public method, you must use a attribute.
 Of course, it's a theorical view and we look all methods accessing directly the attribute before getting more analysis.  We have found 5 methods : 
 \begin{itemize}
@@ -64,13 +62,11 @@ Of course, it's a theorical view and we look all methods accessing directly the 
 In ddition to checking the code of methods, it is interesting to note that this methods are well used by this class or children classes.\\
 Even if the integrity of the attribute is checked in every method accessing directly to the attribute, we see that almost method performs a test on property.  Why the creator doesn't use the test method in other methods listed below ? \\
 Finally, we see that some methods are setter for property.  Because property contains keys and values, the creator can not do a "simple" setter to change the property but he create method to add or remove (key,value).  So, in conclusion, we can see that it's important to check the code after reading this schema and, evenf if we found no getter and setter, the most methods accessing directly the attribute are setter and getter for the structure of property.\\
-
 For the dark blue links, we see that a lot of methods are linked together.  It's a signe that the code are modulable and reduce code duplication.  It is also the consequence of the \textsc{PetitParser} system : it uses structures with childrens and list of object.  To access these structures,  methods use these sub-structures and methods related to them.\\
-
 Finally, we see some brown arrows.  It means that the method override code.  AND ???? \\
 
 \subsection{Duplication side-by-side}
-Moi, Moose me renvoit un schéma vide, WTF ?
+Moi, Moose me renvoit un schéma vide, WTF ? - Pareil :)
 
 \subsection{Bad smells}
 With the Moose tool, we can have metrics about almost everything but they are not all relevant to detect bad smells.  To Detect more precisly some bad smells, we have created some query to get bad methods.\\
