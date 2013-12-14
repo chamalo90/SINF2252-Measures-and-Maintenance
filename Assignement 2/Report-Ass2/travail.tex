@@ -101,7 +101,20 @@ This query return 22 classes and we can visualize these with the blueprint schem
 \includegraphics[scale=0.35]{more_access_blueprint.png}
 \caption{Blueprint of classes with more accessors than 2* attributes}
 \end{figure}
+Here we can notice that almost classes have 2 accessors methods for one attribute, except the PPFailingParser class with one attribute and 3 accessors.  In fact, when we analyze the code, we see that we have one getter, one setter and one method to show the attribute because the attribute is a message with a specific format who are not very readable.  Like earlier in this report, we see a lot of light blue links, that symbolize an access to a attribute without accessors. As the query used indicate that we have, at least, two accessors, it is a bad smell to access direclty attributes and don't use accessors.  In particulary, in the class PPFailingParser, we have three accessors and some methods access directly the attribute.\\
 
+At the opposite of the previous query, we can listing all classes with less than 2 accessors per attribute.
+\begin{lstlisting}
+each numberOfAccessorMethods < ( 2 * each numberOfAttributes ) 
+\end{lstlisting}
+This query return 15 classes and we can visualize these with the blueprint schema.\\
+\begin{figure}[ht]
+\centering
+\label{less_access_blueprint}
+\includegraphics[scale=0.35]{less_access_blueprint.png}
+\caption{Blueprint of classes with less accessors than 2* attributes}
+\end{figure}
+The number of classes are smaller but, again, we see a lot of light blue links.  For the biggest arrow, we have already analysing this in a previous section because it represent PPParser class.  For the others classes, we see that some of them have a lot of light blue links, like the arrow on the left of PPParser.  It is the PPToken class every methods (privete or public) access directly to attributes.  When we analyze the code of this class, we see that almost methods just read attributes but when you have accessors to do that, why access directly ?\\
 
 \todo{duplication side-by-side}
 \todo{CityMap}
