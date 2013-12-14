@@ -110,7 +110,48 @@ This query return 15 classes and we can visualize these with the blueprint schem
 \includegraphics[scale=0.35]{less_access_blueprint.png}
 \caption{Blueprint of classes with less accessors than 2* attributes}
 \end{figure}
-The number of classes are smaller but, again, we see a lot of light blue links.  For the biggest arrow, we have already analysing this in a previous section because it represent PPParser class.  For the others classes, we see that some of them have a lot of light blue links, like the arrow on the left of PPParser.  It is the PPToken class every methods (privete or public) access directly to attributes.  When we analyze the code of this class, we see that almost methods just read attributes but when you have accessors to do that, why access directly ?\\
+The number of classes are smaller but, again, we see a lot of light blue links.  For the biggest arrow, we have already analysing this in a previous section because it represent PPParser class.  For the others classes, we see that some of them have a lot of light blue links, like the arrow on the left of PPParser.  It is the PPToken class every methods (privete or public) access directly to attributes.  When we analyze the code of this class, we see that almost methods just read attributes but when you have accessors to do that, why access directly ?  It's also not very good for maintenance.  If you change your attribute (other type or the way you store key/value), you must refactoring alls methods accessing directly to this attribute.  According to this blueprint schema, we  see that it will be a big work.\\
+
+
+\subsubsection{High parameter number}
+An other interesting metric is the number of parameter for every method and, in particular, find methods with a high number of parameters.  This is a very interesting metric beacause method receiving a lot of parameters can be defficult to read and we can assume that lot paramters indicate a method performing too much work.  We can also assume that all paramters can be grouped in a object, where parameters are related.  Using object rather than parameters are very usefull if you change the way you represent paramters in this object.  If it is only passed in parameter, you must change more than if you use object.\\
+To find methods with a lot of parameters, we use this query :
+
+\begin{lstlisting}
+each numberOfParameters > aNumber
+\end{lstlisting}
+Because the number of parameters can vary depending on the program, we have performed this query for aNumber form 0 until we have no methods.  We found that 6 is the highest parameter number. \\ \\
+
+\begin{tabular}{|l|c|}
+  \hline
+  aNumber& Number of methods \\
+  \hline
+  0 & 2216 \\
+  1 & 472 \\
+  2 & 105 \\
+  3 & 32 \\
+  4 & 10 \\
+  5 & 3 \\
+  6 & 1 \\
+  \hline
+\end{tabular}
+We clearly see that the number of methods decrease when we increase the number of parameters.  It is also very interesting to see that the highest parameter number is 6, a small number.  To go deeper in our measure, we analyse the code of the metho with 6 parameters :  "matchList" in the PetitAnalyzer package from PPParser.\\
+The header of this method is :
+\begin{lstlisting}
+matchList: matchList index: matchIndex against: parserList index: parserIndex inContext: aDictionary seen: aSet
+\end{lstlisting}
+
+As say before, this is not very readable.  Also, we found a long method (35 lines) with no comments which does not help in understanding.  A manual analysis of the code explain us that it is a method testing if two list match (\todo{je suis pas sur :p}).  So, we can group parameters about list in one object.  With this solution, we can reduce the parameters number but mainly augment the cohesion in adding method directly in the object.  It is also more efficient when you want to use this method : with an object, you give just the object, you don't want to pass each parameter and try to have found every parameter before using this method.  it is very relevant because we found that this method is access in 51 methods.\\
+
+\subsubsection{Brain and god classes}
+A brain method or class is a method or a class that do too much work.  In general, we try to avoid such methods in programs because such methods are very specific, impossible to reuse and it is very difficult to maintain the code.  In general, it's the signe that your programs are not very modulable and you can improve your program by splitting these methods in several smaller methods.\\
+To find these methods or classes, we can search for long methods but it's not enough.  We search also methods with a lot of conditionnals.\\ 
+\begin{lstlisting}
+each numberOfConditionals > aNumber
+\end{lstlisting}
+Again, aNumber is a variable and we can ajust it to do better analysis.  If we take 5, we found 5 methods, whose the "matchList" method and parseOn method.  It's not a suprise because we have found this method in the large emthods emtrics and in the high parameters number metric.\\
+In this 5 methods, we found 3 methods from PetitParser package.  Before qualifing "God class" this class, given the definition of a god class.  According to the litterature, we can qualifing a class a "god class" if it is a complex class with low cohesion and with a high number of outer class accesses.\\
+To detect god class, we can use a query but each property of a god class has still analysed.  So, we can say that PPParser is a god class.\\
 
 \todo{duplication side-by-side}
 \todo{CityMap}
