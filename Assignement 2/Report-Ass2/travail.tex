@@ -3,15 +3,15 @@
 \usepackage{todonotes}
 \begin{document}
 \input{title.tex}
-\set
+\setstretch{1.0}
 \section{Introduction}
 For the first assignment, we had to analyse the code quality of the Petit-Parser framework project. Since we had to perform this analysis manually and Petit-Parser is a quite large framework, it was a hard job to go through all the code and analysis wasn't perfect because there were too many lines of code to read through. \\
 In this report, we will use some Moose tools to perform an automated code analysis of the same system. Our conclusion in the first report were optimistic about Petit-Parser even if we found some bad smells. Let's see if our previous conclusions are still valid after a deeper analysis with some metrics.
 
-\section{Overview}
+\section{Analysis}
 \subsection{The Moose Pyramid}
 The first tool given by Moose that is visualizing feature which gives a pyramid containing general metrics of the overall system. 
-\begin{figure}[ht]
+\begin{figure}[ht!]
 \label{pyramid}
 \includegraphics[scale=0.8]{overview.png}
 \caption{Overview Pyramid}
@@ -21,25 +21,24 @@ The block on the top, in green, gives metrics about inheritance measurements. Th
 The block at the bottom left side gives several metrics about the size. The first metric shown is the number of packages. The number computed is lower than what would be expected for such a framework. But, as we already navigate manually through the code, we can say that strict rules are respected to build packages. These packages sometimes contain a large number of classes, especially the ones with tests and with parser types. The number of packages metric can be a bit distorted for this kind of framework. The second metric represents the number of classes. This time, the number is too high. To understand why this result could be a bad smell, we went back to the system browser. We saw that packages are mostly divided in two categories. There are packages that are almost empty. A very short number of classes are implemented. There are also packages with a way too many classes. After searching why these packages are too big, we found that the classes they put in them were still logically managed.  For instance, \textit{PetitParser-Parsers} package contains a large number of classes but these classes must be in this package. They are describing the different parsing strategies for the different types of parsers. The next metric is the number of methods. The number is a bit lower than what is expected. This observation comes from the fact that we have a large number of derived class. Some methods are written in a class higher in the hierarchy and don't need to be defined in all subclasses anymore. The last metric we'll take a look at is the number of lines of code. \textsc{PetitParser} seems to have this number in the average for Smalltalk projects.
 \subsection{System complexity}
 Before going deeper in the code, it is very interesting to identify which classes are worst than others.  To visualize this, we give, below, the System Complexity of \textsc{PetitParser}.
-The height of the arrow symbolize the number of methods and the width symbolize the number of variables.
-\begin{figure}[ht]
+The height of the squares symbolizes the number of methods and the width symbolizes the number of variables.
+\begin{figure}[ht!]
 \label{system_complexity}
 \includegraphics[scale=0.35]{system_complexity.png}
 \caption{System Complexity}
 \end{figure}
-From left to right, we show : PPAbstractParserTest,PPParser, PJASTNode, SQLASTNode and Petit Analyzer code.  Other smalls arrows are objects from PetitParser or from SmallTalk.
-We see that PPAbstractParserTest and PPParser are worst than others.  Actually, if we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser added all his testing methods in one class.  In other part, for the PPParser classes, and particularly for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we know the syntax for Java and SQlite, we understand that the number of variables must be very important.
+From left to right, we show : PPAbstractParserTest,PPParser, PJASTNode, SQLASTNode and Petit Analyzer code.  Other smalls squares are objects from PetitParser or from SmallTalk.
+We see that PPAbstractParserTest and PPParser are worst than others.  Actually, if we browse the code of this two classes, we understand the schema : for the test part, the creator of PetitParser added all his testing methods in one class.  In other part, for the PPParser classes, and particularly for PPJavaSyntax and PetitSQLiteGrammar, he put all the variables in the same class.  When we know the syntax for Java and SQlite, we understand that the number of variables will be very large.
 This graph also shows that the core of the PetitParser system is kind of efficient regarding to the complexity of this system.
 \subsection{Blueprints Complexity}
-An other tool to analyze \textsc{PetitParser} is Blueprint.  With this tool, we can show invocation of methods, accesses to attributes and how methods and attributes interact.\\
+An other tool to analyse \textsc{PetitParser} is Blueprint.  With this tool, we can show invocation of methods, accesses to attributes and how methods and attributes interact.\\
 As we have seen before with the System complexity, the test classes are not very efficient and we prefer to focus on the core of \textsc{PetitParser}.  So, you can find below a schema representing the Blueprint Complexity of \textsc{PetitParser} classes and its core system.\\
 \begin{figure}[ht]
 \label{blueprint_system}
 \includegraphics[scale=0.35]{blueprint_petit_parser.png}
 \caption{Blueprint Complexity of PetitParser packages}
 \end{figure}
-This schema contains arrows representing classes and his hierarchy.  In each arrow, we found 5 columns corresponding of differents entities we found in a class.  So from left to right, we found initialization, public methods, private methods, accessors and attributes.  In each column, we have also arrows representing the entity of this type in the class.  We found also, crossing columns, dark and light blue links.  The dark link represents the invocation of methods and the light one represents access to attributes.\\
-
+This schema contains rectangles representing classes and his hierarchy.  In each rectangle, we found 5 columns corresponding of differents entities we found in a class.  So from left to right, we found initialization, public methods, private methods, accessors and attributes.  In each column, we have also squares representing the entity of this type in the class.  We found also, crossing columns, dark and light blue links.  The dark link represents the invocation of methods and the light one represents access to attributes.\\
 In this schema, at first glance, we see that the arrow, and his tree, in the middle is the main class of \textsc{PetitParser}.  The class call \textsc{PetitParser} and, indeed, it is the main class of the project. \\
 
 \subsubsection{Blueprints Complexity of PetitParser}
@@ -49,44 +48,50 @@ In this schema, at first glance, we see that the arrow, and his tree, in the mid
 \includegraphics[scale=0.35]{blueprint_pparser.png}
 \caption{Blueprint Complexity of PetitParser class}
 \end{figure}
-In the schema, we can see more clearly the arrow representing \textsc{PetitParser} class.\\
-Based on the legend explained above, we found that it contains no accessors and one attribute, \textsc{properties} which is a instanceVariable.  Some methods, public or private access directly to this attribute.  In theorical view, it's not good to access directly, you must prefer to use accessor.  With accessor, you can validate the information before setting your attributes.  Of course, it is less important for private method if you are very carefull when you use an attribute.  But, for public method, you must use a attribute.
-Of course, it's a theorical view and we look all methods accessing directly the attribute before getting more analysis.  We have found 5 methods : 
+In the schema, we can see more clearly the shape representing \textsc{PetitParser} class.\\
+Based on the legend explained above, we found that it contains no accessors and one attribute, \textsc{properties} which is a instance variable.  Some methods, public or private, access directly to this attribute.  In a theoretical viewpoint, it's not good to access directly, you should use accessors.  With accessors, you can validate informations before setting your attributes.  Of course, it's less important for private methods if you are very careful when you use an attribute.  But, for public methods, you must use an accessor.
+Of course, it's a theoretical viewpoint and we look all methods accessing directly the attribute before getting more analysis.  We found 5 methods : 
 \begin{itemize}
-	\item removeProperty: aKey ifAbsent: aBlock : this private method 	remove the property with aKey.  If a key is found, it returns the associated value and the the result of evaluating aBlock otherwise.  According to the code, we can say that this method is a safe method for the attribute : it removes the key if, and only if, the key exists.  With this solution, the integrity of the attribute is checked;
-	\item propertyAt: aKey put: anObject : this private method change the object (anObject) linked to the key (aKey) in the property.  if aKey is not found, it creates a new entry.  Again, we see that this method is a safe method and the integrity of the attribute is checked;
-	\item propertyAt: aKey ifAbsent: aBlock : this private method give the value associated to aKey if aKey is a key in property and answer the result of evaluating aBlock otherwise.  Like the first method, we see that the integrity of the attribute is checked ;
-	\item postCopy : this public method give a copy of the property.  To perform this copy, it is normal to access to the attribute but, for a public method, it's preferable to use a getter, event if we don't change it ;
-	\item hasProperty: aKey : this public method test if aKey is a key in the property.  Also, like the previous public method, the integrity of the attribute is checked but it's not good to access directly to an attribute in a public method.
+	\item removeProperty: aKey ifAbsent: aBlock : this private method	remove the property with aKey.  If a key is found, it returns the associated value and the result of evaluating aBlock otherwise.  According to the code, we can say that this method is a safe method for the attribute : it removes the key if, and only if, the key exists.  With this solution, the integrity of the attribute is checked;
+	\item propertyAt: aKey put: anObject : this private method changes the object (anObject) linked to the key (aKey) in the property.  if aKey is not found, it creates a new entry.  Again, we see that this method is a safe method and the integrity of the attribute is checked;
+	\item propertyAt: aKey ifAbsent: aBlock : this private method gives the value associated to aKey if aKey is a key in property and answers the result of evaluating aBlock otherwise.  Like the first method, we see that the integrity of the attribute is checked ;
+	\item postCopy : this public method gives a copy of the property.  To perform this copy, it is normal to access to the attribute but, for a public method, it's preferable to use a getter, event if we don't change it ;
+	\item hasProperty: aKey : this public method tests if aKey is a key in the property.  Also, like the previous public method, the integrity of the attribute is checked but it's not good to access directly to an attribute in a public method.
 \end{itemize}
-In ddition to checking the code of methods, it is interesting to note that this methods are well used by this class or children classes.\\
-Even if the integrity of the attribute is checked in every method accessing directly to the attribute, we see that almost method performs a test on property.  Why the creator doesn't use the test method in other methods listed below ? \\
-Finally, we see that some methods are setter for property.  Because property contains keys and values, the creator can not do a "simple" setter to change the property but he create method to add or remove (key,value).  So, in conclusion, we can see that it's important to check the code after reading this schema and, evenf if we found no getter and setter, the most methods accessing directly the attribute are setter and getter for the structure of property.\\
-For the dark blue links, we see that a lot of methods are linked together.  It's a signe that the code are modulable and reduce code duplication.  It is also the consequence of the \textsc{PetitParser} system : it uses structures with childrens and list of object.  To access these structures,  methods use these sub-structures and methods related to them.\\
-Finally, we see some brown arrows.  It means that the method override code.  AND ???? \\
+In addition of checking the code of methods, it is interesting to note that this methods are well used by this class or children classes.\\
+Even if the integrity of the attribute is checked in every method accessing directly to the attribute, we see that almost all methods performs a test on property.  Why the creator didn't use the test method in other methods listed below ? \\
+Finally, we see that some methods are setter for property.  Because property contains keys and values, the creator can not do a "simple" setter to change the property but he creates method to add or remove (key,value).  So, in conclusion, we can see that it's important to check the code after reading this schema and, even if we found no getter and setter, the most methods accessing directly the attributes are setter and getter for the structure of property.\\
+For the dark blue links, we see that a lot of methods are linked together.  It's a sign that the code is modular and it reduces the probability of code duplication.  It is also the consequences of the \textsc{PetitParser} system : it uses structures with children and list of object.  To access these structures,  methods use these sub-structures and methods related to them.\\
+Finally, we see some squares coloured in brown.  It means that the method overrides code. Since we pointed out in the first report that \textsc{PetitParser} has a good use of inheritance, it seems quite logic.
 
 \subsection{Duplication side-by-side}
-Moi, Moose me renvoit un schéma vide, WTF ? - Pareil :)
+\todo{What is dis fuk ??}
 
 \subsection{Bad smells}
-With the Moose tool, we can have metrics about almost everything but they are not all relevant to detect bad smells.  To Detect more precisly some bad smells, we have created some query to get bad methods.\\
+With the Moose tools, we can compute metrics about almost everything but they are not all relevant to detect bad smells.  To detect more precisely some bad smells, we wrote some queries.\\
 
 \subsubsection{Number of lines of Code}
-First, we want to see methods where the number of lines of codes is bigger than 50, we can query :
+First, we wanted to see methods where the number of lines of code is bigger than 50, we executed this query after selecting all methods from \textsc{PetitParser} model:
 \begin{lstlisting}
 each numberOfLinesOfCode>50
 \end{lstlisting}
-With this query, we can see that, in the \textsc{PetitParser} System, we found 7 classes with more than 50 lines of codes.\\
+With this query, we can see that, in the \textsc{PetitParser} model, we found 10 methods with more than 50 lines of codes. All of them are tests where the large number of lines can be explained by the fact that a lot of unit tests are written in the same test method. Two other methods which are not tests were found by this query. The first one is \textsc{Smalltalk::PetitSQLiteGrammer.expression()}. This method defines all expressions which can be written in the SQL language. Most of the lines composing it look similar and handle different kind of SQL prefixes. The second one is \textsc{Smalltalk::PPDrabBrowser.borowseOutputOn:(Object)}. This method has the job to choose how to display the output. A large number of lines are written because the function has to define how to configure the display of the output (informations about title, column names and how to handle the output format). This method could be divided in smaller ones. The developer could have written a different method for each kind of browser. 
 
+Secondly, we wanted to know which were the longest classes. We executed this query after selecting all classes from \textsc{PetitParser} model:
+\begin{lstlisting}
+each numberOfLinesOfCode>100
+\end{lstlisting}
 \begin{figure}[ht]
 \centering
 \label{system_complexity_big_classes}
 \includegraphics[scale=0.55]{system_complexity_big_methods.png}
 \caption{Complexity of big classes}
 \end{figure}
-In the schema below, we can see that the class PPParser is the bigger one, with 758 lines of codes.  To go depper in the analysis, we can perform the query for this class and we see \todo{plante chez moi}\\
+The schema above shows the classes found by the query. All the biggest squares are classes implementing grammar rules. From left to right, the first column of big squares represents Java lexicon and syntax parser implementation. The big square stuck between rectangles is the implementation of Smalltalk grammar. And the last one on the right is the parser implementation of SQLite grammar. These classes have a large number of variables, one for each kind of expression or keyword in the language parsed. They also have a large number of methods because they must be able to know what to do with these different keywords or expressions. A refactoring operation could be done by dividing these classes in groups of keywords or expressions which are similar.\\
+There are also a large number of long rectangles which means a large number of methods in these classes. Most of them are test classes again. The class \textsc{Smalltalk::PPParser} caught our attention because it isn't a test class and the rectangle representing it is even longer then most of the test classes. We went back to the code of this class and discovered that this class is the most general class for the parsers in the parser hierarchy. His job is to implement most of the routines that will be useful to do the parsing work. The children classes implement specific routines related with parsing strategies. This class would be hard to write in an other way because it represents a general entity that could not be divided. 
+
 \subsubsection{Accessors}
-An other interresting metric is the number of getter and setter for one attribute.  In mai ncase, you must have one getter and one setter for every attribute.  We see before that, for some attributes, we don't have any accessors. \\
+An other interesting metric is the number of getter and setter for one attribute.  In main case, you must have one getter and one setter for every attribute.  We see before that, for some attributes, we don't have any accessors. \\
 \begin{lstlisting}
 each numberOfAccessorMethods >= ( 2 * each numberOfAttributes ) 
 \end{lstlisting}
@@ -97,9 +102,9 @@ This query return 22 classes and we can visualize these with the blueprint schem
 \includegraphics[scale=0.35]{more_access_blueprint.png}
 \caption{Blueprint of classes with more accessors than 2* attributes}
 \end{figure}
-Here we can notice that almost classes have 2 accessors methods for one attribute, except the PPFailingParser class with one attribute and 3 accessors.  In fact, when we analyze the code, we see that we have one getter, one setter and one method to show the attribute because the attribute is a message with a specific format who are not very readable.  Like earlier in this report, we see a lot of light blue links, that symbolize an access to a attribute without accessors. As the query used indicate that we have, at least, two accessors, it is a bad smell to access direclty attributes and don't use accessors.  In particulary, in the class PPFailingParser, we have three accessors and some methods access directly the attribute.\\
+Here we can notice that almost classes have two accessor methods for one attribute, except the PPFailingParser class with one attribute and 3 accessors.  Actually, when we browse the code, we see that this class has one getter, one setter and one method to show the attribute because it corresponds to a message with a specific format which is not very readable.  Like earlier in this report, we see a lot of light blue links, that symbolize an access to a attribute without accessors. As the query used indicate that we have, at least, two accessors, it is a bad smell to access directly attributes and not use accessors.  Particularly, in the class PPFailingParser, we have three accessors and some methods accessing directly the attribute.\\
 
-At the opposite of the previous query, we can listing all classes with less than 2 accessors per attribute.
+At the opposite of the previous query, we can list all classes with less than 2 accessors per attribute : 
 \begin{lstlisting}
 each numberOfAccessorMethods < ( 2 * each numberOfAttributes ) 
 \end{lstlisting}
@@ -110,18 +115,15 @@ This query return 15 classes and we can visualize these with the blueprint schem
 \includegraphics[scale=0.35]{less_access_blueprint.png}
 \caption{Blueprint of classes with less accessors than 2* attributes}
 \end{figure}
-The number of classes are smaller but, again, we see a lot of light blue links.  For the biggest arrow, we have already analysing this in a previous section because it represent PPParser class.  For the others classes, we see that some of them have a lot of light blue links, like the arrow on the left of PPParser.  It is the PPToken class every methods (privete or public) access directly to attributes.  When we analyze the code of this class, we see that almost methods just read attributes but when you have accessors to do that, why access directly ?  It's also not very good for maintenance.  If you change your attribute (other type or the way you store key/value), you must refactoring alls methods accessing directly to this attribute.  According to this blueprint schema, we  see that it will be a big work.\\
-
-
+The number of classes are smaller but, again, we see a lot of light blue links.  For the biggest rectangle, we have already analysed this in a previous section because it represents the PPParser class.  For the other classes, we see that some of them have a lot of light blue links, like the rectangle on the left of PPParser.  It is the PPToken class every methods (private or public) accesses directly to attributes.  When we analyse the code of this class, we see that almost all methods just read attributes but when there are accessors to do this job.  It's also not very good for maintenance.  If you change your attribute (other type or the way you store key/value), you must change the code for alls methods accessing directly to this attribute. According to this blueprint schema, we  see that it will be a big work.
 \subsubsection{High parameter number}
-An other interesting metric is the number of parameter for every method and, in particular, find methods with a high number of parameters.  This is a very interesting metric beacause method receiving a lot of parameters can be defficult to read and we can assume that lot paramters indicate a method performing too much work.  We can also assume that all paramters can be grouped in a object, where parameters are related.  Using object rather than parameters are very usefull if you change the way you represent paramters in this object.  If it is only passed in parameter, you must change more than if you use object.\\
-To find methods with a lot of parameters, we use this query :
-
+An other interesting metric is the number of parameters for every method and, in particular, finding methods with a high number of them.  This is a very interesting metric because methods receiving a lot of parameters can be difficult to read and we can assume that lot parameters indicates a method performing too much work.  We can also assume that all parameters can be grouped in a larger object, where all variables needed are stored.  Using an object rather than parameters is very useful if you change the way you represent parameters in this object.  If it is only passed in parameter, you must change more than if you use an object.\\
+To find methods with a lot of parameters, we used this query :
 \begin{lstlisting}
 each numberOfParameters > aNumber
 \end{lstlisting}
-Because the number of parameters can vary depending on the program, we have performed this query for aNumber form 0 until we have no methods.  We found that 6 is the highest parameter number. \\ \\
-
+Because the number of parameters can vary depending on the program, we have performed this query for aNumber form 0 until we have no methods.  We found that 6 is the highest parameters number. \\
+\begin{center}
 \begin{tabular}{|l|c|}
   \hline
   aNumber& Number of methods \\
@@ -135,27 +137,29 @@ Because the number of parameters can vary depending on the program, we have perf
   6 & 1 \\
   \hline
 \end{tabular}
-We clearly see that the number of methods decrease when we increase the number of parameters.  It is also very interesting to see that the highest parameter number is 6, a small number.  To go deeper in our measure, we analyse the code of the metho with 6 parameters :  "matchList" in the PetitAnalyzer package from PPParser.\\
+\end{center}
+We clearly see that the number of methods decreases when we increase the number of parameters.  It is also very interesting to see that the highest parameter number is 6, a small number.  To go deeper in our measurements, we analysed the code of the method with 6 parameters :  "matchList" in the PetitAnalyzer package from PPParser.\\
 The header of this method is :
-\begin{lstlisting}
+\begin{lstlisting} [breaklines]
 matchList: matchList index: matchIndex against: parserList index: parserIndex inContext: aDictionary seen: aSet
 \end{lstlisting}
-
-As say before, this is not very readable.  Also, we found a long method (35 lines) with no comments which does not help in understanding.  A manual analysis of the code explain us that it is a method testing if two list match (\todo{je suis pas sur :p}).  So, we can group parameters about list in one object.  With this solution, we can reduce the parameters number but mainly augment the cohesion in adding method directly in the object.  It is also more efficient when you want to use this method : with an object, you give just the object, you don't want to pass each parameter and try to have found every parameter before using this method.  it is very relevant because we found that this method is access in 51 methods.\\
+As said before, this is not very readable.  Also, we found a long method (35 lines) with no comments which does not help in understanding.  A manual analysis of the code explains us that it is a method testing if two list match.  So, we could group parameters about lists in one object.  With this solution, we can reduce the parameters number but mainly increase the cohesion in adding method directly in the object.  It is also more efficient when you want to use this method : with an object, you give just the object, you don't have to pass each parameter and try to find every parameter before using it. It is very relevant because we found that this method is accessed in 51 methods.\\
 
 \subsubsection{Brain and god classes}
-A brain method or class is a method or a class that do too much work.  In general, we try to avoid such methods in programs because such methods are very specific, impossible to reuse and it is very difficult to maintain the code.  In general, it's the signe that your programs are not very modulable and you can improve your program by splitting these methods in several smaller methods.\\
-To find these methods or classes, we can search for long methods but it's not enough.  We search also methods with a lot of conditionnals.\\ 
+A brain method or class is a method or a class that do too much work.  In general, we try to avoid such methods in programs because such methods are very specific, impossible to reuse and they are very difficult to maintain. In general, it's the sign that your program is not very modular and you can improve your program by splitting these methods in several smaller methods.\\
+To find these methods or classes, we can search for long methods but it's not enough.  We search also methods with a lot of conditionals.\\ 
 \begin{lstlisting}
 each numberOfConditionals > aNumber
 \end{lstlisting}
-Again, aNumber is a variable and we can ajust it to do better analysis.  If we take 5, we found 5 methods, whose the "matchList" method and parseOn method.  It's not a suprise because we have found this method in the large emthods emtrics and in the high parameters number metric.\\
-In this 5 methods, we found 3 methods from PetitParser package.  Before qualifing "God class" this class, given the definition of a god class.  According to the litterature, we can qualifing a class a "god class" if it is a complex class with low cohesion and with a high number of outer class accesses.\\
-To detect god class, we can use a query but each property of a god class has still analysed.  So, we can say that PPParser is a god class.\\
+Again, aNumber is a variable and we can adjust it to perform better analysis.  If we take 5, we found 5 methods, whose the \textsc{matchList} method and \textsc{parseOn} method.  It's not a suprise because we have found this method in the large emthods metrics and in the high parameters number metric.\\
+In this 5 methods, we found 3 methods from \textsc{PetitParser} package. According to the literature, we can qualify a class a "god class" if it is a complex class with low cohesion and with a high number of outer class accesses.
+To detect god class, we can use a query but each property of a god class has still been analysed.  So, we can say that PPParser is a god class.\\
 
-\todo{duplication side-by-side}
+
+\subsection{CityMap}
 \todo{CityMap}
 
+\section{Conclusion}
 
 \end{document}
 
