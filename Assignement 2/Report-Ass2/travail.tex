@@ -7,13 +7,13 @@
 \section{Introduction}
 For the first assignment, we had to analyse the code quality of the Petit-Parser framework project. Since we had to perform this analysis manually and Petit-Parser is a quite large framework, it was a hard job to go through all the code and analysis wasn't perfect because there were too many lines of code to read through. \\
 In this report, we will use some Moose tools to perform an automated code analysis of the same system. Our conclusion in the first report were optimistic about Petit-Parser even if we found some bad smells. Let's see if our previous conclusions are still valid after a deeper analysis with some metrics.
-
 \section{Analysis}
 \subsection{The Moose Pyramid}
 The first tool given by Moose that is visualizing feature which gives a pyramid containing general metrics of the overall system. 
 \begin{figure}[ht!]
 \label{pyramid}
-\includegraphics[scale=0.8]{overview.png}
+\centering
+\includegraphics[scale=0.5]{overview.png}
 \caption{Overview Pyramid}
 \end{figure}
 In this pyramid, you can observe three main blocks: one on the top and two at each side of the bottom. \\
@@ -39,8 +39,7 @@ As we have seen before with the System complexity, the test classes are not very
 \caption{Blueprint Complexity of PetitParser packages}
 \end{figure}
 This schema contains rectangles representing classes and his hierarchy.  In each rectangle, we found 5 columns corresponding of differents entities we found in a class.  So from left to right, we found initialization, public methods, private methods, accessors and attributes.  In each column, we have also squares representing the entity of this type in the class.  We found also, crossing columns, dark and light blue links.  The dark link represents the invocation of methods and the light one represents access to attributes.\\
-In this schema, at first glance, we see that the arrow, and his tree, in the middle is the main class of \textsc{PetitParser}.  The class call \textsc{PetitParser} and, indeed, it is the main class of the project. \\
-
+In this schema, at first glance, we see that the arrow, and his tree, in the middle is the main class of \textsc{PetitParser}.  The class call \textsc{PetitParser} and, indeed, it is the main class of the project. 
 \subsubsection{Blueprints Complexity of PetitParser}
 \begin{figure}[ht]
 \centering
@@ -63,20 +62,29 @@ Even if the integrity of the attribute is checked in every method accessing dire
 Finally, we see that some methods are setter for property.  Because property contains keys and values, the creator can not do a "simple" setter to change the property but he creates method to add or remove (key,value).  So, in conclusion, we can see that it's important to check the code after reading this schema and, even if we found no getter and setter, the most methods accessing directly the attributes are setter and getter for the structure of property.\\
 For the dark blue links, we see that a lot of methods are linked together.  It's a sign that the code is modular and it reduces the probability of code duplication.  It is also the consequences of the \textsc{PetitParser} system : it uses structures with children and list of object.  To access these structures,  methods use these sub-structures and methods related to them.\\
 Finally, we see some squares coloured in brown.  It means that the method overrides code. Since we pointed out in the first report that \textsc{PetitParser} has a good use of inheritance, it seems quite logic.
-
 \subsection{Duplication side-by-side}
-\todo{What is dis fuk ??}
-
+In the previous report, our search of duplicated code was unsuccessful and what we found was wrong. We improved a lot our search by using the \textsc{MOOSE} tool. 
+\begin{figure}[ht!]
+\label{code-duplication}
+\centering \includegraphics[scale=0.6]{duplication.jpg}
+\caption{Code-duplication side by side figure by \textsc{MOOSE}}
+\end{figure}
+The figure built by the \textsc{MOOSE} tool shows that all detected duplicated code lines are contained in their own class. Most of them stand in test classes. You can find duplicated code in this classes because some unit tests are done multiple time for different parsing strategies. For instance, this code appears twice in \textsc{PPParserTest} class :
+\begin{lstlisting}
+	self assert: parser parse: 'a' to: #($a).
+	self assert: parser parse: 'aba' to: #($a $b $a).
+	self assert: parser parse: 'ababa' to: #($a $b $a $b $a).
+\end{lstlisting}
+It can be explained by the fact that this tests are done for parsing work with and without separators. Other examples of this kind of duplication can be found in the test classes shown in the figure \ref{code-duplication}. A method could be used to contain this code. It would need a parser as parameter and perform the same tests. This duplicate code from tests maybe could be avoided but it's not a serious problem in the code.\\
+We will now take a look at the only inter-class code duplication. This duplication occurs between \textsc{PPJavaTokenParser} class and \textsc{PPSmalltalkTokenParser} class. These two classes implement method to parse comments in code and return the text. The hardest part of the job is to find the symbols of starting or ending comments. We think that most of programming languages use same techniques to allow comments in the code. It would be a better idea to implement methods in \textsc{PetitParser-Parsers::PPTokenParser} which could read most of the comment rules from well-known languages. These methods could ask for symbols of starting and ending comments as parameters and could be overridden by implementations of parsers that follow different rules.
 \subsection{Bad smells}
-With the Moose tools, we can compute metrics about almost everything but they are not all relevant to detect bad smells.  To detect more precisely some bad smells, we wrote some queries.\\
-
+With the Moose tools, we can compute metrics about almost everything but they are not all relevant to detect bad smells.  To detect more precisely some bad smells, we wrote some queries.
 \subsubsection{Number of lines of Code}
 First, we wanted to see methods where the number of lines of code is bigger than 50, we executed this query after selecting all methods from \textsc{PetitParser} model:
 \begin{lstlisting}
 each numberOfLinesOfCode>50
 \end{lstlisting}
-With this query, we can see that, in the \textsc{PetitParser} model, we found 10 methods with more than 50 lines of codes. All of them are tests where the large number of lines can be explained by the fact that a lot of unit tests are written in the same test method. Two other methods which are not tests were found by this query. The first one is \textsc{Smalltalk::PetitSQLiteGrammer.expression()}. This method defines all expressions which can be written in the SQL language. Most of the lines composing it look similar and handle different kind of SQL prefixes. The second one is \textsc{Smalltalk::PPDrabBrowser.borowseOutputOn:(Object)}. This method has the job to choose how to display the output. A large number of lines are written because the function has to define how to configure the display of the output (informations about title, column names and how to handle the output format). This method could be divided in smaller ones. The developer could have written a different method for each kind of browser. 
-
+With this query, we can see that, in the \textsc{PetitParser} model, we found 10 methods with more than 50 lines of codes. All of them are tests where the large number of lines can be explained by the fact that a lot of unit tests are written in the same test method. Two other methods which are not tests were found by this query. The first one is \textsc{Smalltalk::PetitSQLiteGrammer.expression()}. This method defines all expressions which can be written in the SQL language. Most of the lines composing it look similar and handle different kind of SQL prefixes. The second one is \textsc{Smalltalk::PPDrabBrowser.borowseOutputOn:(Object)}. This method has the job to choose how to display the output. A large number of lines are written because the function has to define how to configure the display of the output (informations about title, column names and how to handle the output format). This method could be divided in smaller ones. The developer could have written a different method for each kind of browser. \\
 Secondly, we wanted to know which were the longest classes. We executed this query after selecting all classes from \textsc{PetitParser} model:
 \begin{lstlisting}
 each numberOfLinesOfCode>100
@@ -103,7 +111,6 @@ This query return 22 classes and we can visualize these with the blueprint schem
 \caption{Blueprint of classes with more accessors than 2* attributes}
 \end{figure}
 Here we can notice that almost classes have two accessor methods for one attribute, except the PPFailingParser class with one attribute and 3 accessors.  Actually, when we browse the code, we see that this class has one getter, one setter and one method to show the attribute because it corresponds to a message with a specific format which is not very readable.  Like earlier in this report, we see a lot of light blue links, that symbolize an access to a attribute without accessors. As the query used indicate that we have, at least, two accessors, it is a bad smell to access directly attributes and not use accessors.  Particularly, in the class PPFailingParser, we have three accessors and some methods accessing directly the attribute.\\
-
 At the opposite of the previous query, we can list all classes with less than 2 accessors per attribute : 
 \begin{lstlisting}
 each numberOfAccessorMethods < ( 2 * each numberOfAttributes ) 
@@ -143,23 +150,19 @@ The header of this method is :
 \begin{lstlisting} [breaklines]
 matchList: matchList index: matchIndex against: parserList index: parserIndex inContext: aDictionary seen: aSet
 \end{lstlisting}
-As said before, this is not very readable.  Also, we found a long method (35 lines) with no comments which does not help in understanding.  A manual analysis of the code explains us that it is a method testing if two list match.  So, we could group parameters about lists in one object.  With this solution, we can reduce the parameters number but mainly increase the cohesion in adding method directly in the object.  It is also more efficient when you want to use this method : with an object, you give just the object, you don't have to pass each parameter and try to find every parameter before using it. It is very relevant because we found that this method is accessed in 51 methods.\\
-
+As said before, this is not very readable.  Also, we found a long method (35 lines) with no comments which does not help in understanding.  A manual analysis of the code explains us that it is a method testing if two list match.  So, we could group parameters about lists in one object.  With this solution, we can reduce the parameters number but mainly increase the cohesion in adding method directly in the object.  It is also more efficient when you want to use this method : with an object, you give just the object, you don't have to pass each parameter and try to find every parameter before using it. It is very relevant because we found that this method is accessed in 51 methods.
 \subsubsection{Brain and god classes}
 A brain method or class is a method or a class that do too much work.  In general, we try to avoid such methods in programs because such methods are very specific, impossible to reuse and they are very difficult to maintain. In general, it's the sign that your program is not very modular and you can improve your program by splitting these methods in several smaller methods.\\
-To find these methods or classes, we can search for long methods but it's not enough.  We search also methods with a lot of conditionals.\\ 
+To find these methods or classes, we can search for long methods but it's not enough.  We search also methods with a lot of conditionals.
 \begin{lstlisting}
 each numberOfConditionals > aNumber
 \end{lstlisting}
-Again, aNumber is a variable and we can adjust it to perform better analysis.  If we take 5, we found 5 methods, whose the \textsc{matchList} method and \textsc{parseOn} method.  It's not a suprise because we have found this method in the large emthods metrics and in the high parameters number metric.\\
+Again, aNumber is a variable and we can adjust it to perform better analysis.  If we take 5, we found 5 methods, whose the \textsc{matchList} method and \textsc{parseOn} method.  It's not a surprise because we found this method in the large methods metrics and in the high parameters number metric.\\
 In this 5 methods, we found 3 methods from \textsc{PetitParser} package. According to the literature, we can qualify a class a "god class" if it is a complex class with low cohesion and with a high number of outer class accesses.
-To detect god class, we can use a query but each property of a god class has still been analysed.  So, we can say that PPParser is a god class.\\
-
-
-\subsection{CityMap}
-\todo{CityMap}
-
+To detect god class, we can use a query but each property of a god class has still been analysed.  So, we can say that PPParser is a god class.
 \section{Conclusion}
-
+Following the automated analysis that we did, we can improve our conclusions from previous report. \\
+The overall \textsc{PetitParser} project follows correctly coding rules. Even if there are a lack of comments for most of the classes, the analysis doesn't show up huge mistakes or a large number of bad smells. Most of the bad smells detected by measurements could be explained in a logical way. We still pointed out several errors to correct or refactors to perform. The main problem stands in the complexity of writing a core parser which must be simple, readable and working for all languages at the same time. The \textsc{PPParser} class is directly concerned by this remark. The developer had probably choices to make to implement this class like he did but this doesn't appear in the code. These choices are dealing between respecting programming rules or reading needs of the program and his efficiency. \\
+This second report learned us that automated analysis is a huge time saving technique. It allowed us to perform what we wanted to see for the previous report in a few seconds. A manual analysis is still required to know why measurements seem wrong. The main work time is spent on code which seems to need improvement instead of searching for it for hours. 
 \end{document}
 
